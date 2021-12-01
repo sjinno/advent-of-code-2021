@@ -1,12 +1,14 @@
-use advent_of_code_2021::input;
+use advent_of_code_2021::{input, utils::count_increases};
 use failure::Error;
 
 fn main() -> Result<(), Error> {
     let data = input::parse_input()?;
-    let count = data
-        .windows(4)
-        .filter(|win| win[0..3].iter().sum::<u32>() < win[1..4].iter().sum::<u32>())
-        .count();
+    let count = count_increases(
+        &data
+            .windows(3)
+            .map(|win| win.iter().sum::<u32>())
+            .collect::<Vec<u32>>(),
+    );
     println!("count: {}", count);
     Ok(())
 }
