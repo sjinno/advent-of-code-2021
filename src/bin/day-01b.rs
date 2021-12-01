@@ -8,24 +8,41 @@ fn main() -> Result<(), Error> {
         stdin.lock().read_to_string(&mut buffer)?;
     }
 
+    // let data: Vec<u32> = buffer.lines().map(|elt| elt.parse().unwrap()).collect();
+
+    // let mut prev = data[0] + data[1] + data[2];
+    // let mut counter = 0;
+
+    // for i in 1..data.len() - 2 {
+    //     let curr = data[i] + data[i + 1] + data[i + 2];
+    //     if curr > prev {
+    //         counter += 1;
+    //     }
+    //     prev = curr;
+    // }
+
+    // eprintln!("{}", counter);
+
+    // With windows
     let data = buffer
-        .trim()
-        .split('\n')
-        .map(|elt| elt.trim().parse::<usize>().unwrap())
+        .lines()
+        .map(|elt| elt.parse().unwrap())
         .collect::<Vec<_>>();
 
-    let mut prev = data[0] + data[1] + data[2];
-    let mut counter = 0;
+    let mut prev = data[0..3].iter().sum::<u32>();
 
-    for i in 1..data.len() - 2 {
-        let curr = data[i] + data[i + 1] + data[i + 2];
+    let count = data.windows(4).fold(0, |acc, win| {
+        let curr = win[1..4].iter().sum::<u32>();
         if curr > prev {
-            counter += 1;
+            prev = curr;
+            acc + 1
+        } else {
+            prev = curr;
+            acc
         }
-        prev = curr;
-    }
+    });
 
-    eprintln!("{}", counter);
+    eprintln!("{}", count);
 
     Ok(())
 }

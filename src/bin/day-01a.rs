@@ -9,7 +9,7 @@ fn main() -> Result<(), Error> {
     }
 
     let mut lines = buffer.lines();
-    let mut prev = lines.next().unwrap().parse::<usize>()?;
+    let mut prev = lines.next().unwrap().parse::<usize>()?; // the very first number
     let mut counter = 0;
 
     for line in buffer.lines() {
