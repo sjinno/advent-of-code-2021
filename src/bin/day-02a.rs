@@ -1,5 +1,36 @@
 use failure::Error;
-use std::io::{self, Read};
+use std::{
+    io::{self, Read},
+    str::FromStr,
+};
+
+#[derive(Debug)]
+enum Instruction {
+    Forward(i32),
+    Down(i32),
+    Up(i32),
+}
+
+#[derive(Debug, Default)]
+struct Submarine {
+    h: i32,
+    v: i32,
+}
+
+impl FromStr for Instruction {
+    type Err = Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let mut cmd = s.split_ascii_whitespace();
+        let (dir, x) = (cmd.next().unwrap(), cmd.next().unwrap().parse()?);
+        match dir {
+            "forward" => Ok(Instruction::Forward(x)),
+            "down" => Ok(Instruction::Down(x)),
+            "up" => Ok(Instruction::Up(x)),
+            _ => panic!("No such instruction"),
+        }
+    }
+}
 
 fn main() -> Result<(), Error> {
     let mut buffer = String::new();
@@ -8,25 +39,19 @@ fn main() -> Result<(), Error> {
         stdin.lock().read_to_string(&mut buffer)?;
     }
 
-    let mut h_pos = 0;
-    let mut depth = 0;
+    let mut sub = Submarine::default();
 
     for line in buffer.lines() {
-        let mut split = line.split(' ');
-        let (instruction, x) = (
-            split.next().unwrap(),
-            split.next().unwrap().parse::<isize>()?,
-        );
+        let instruction = Instruction::from_str(line)?;
 
         match instruction {
-            "forward" => h_pos += x,
-            "down" => depth += x,
-            "up" => depth -= x,
-            _ => {}
+            Instruction::Forward(x) => sub.h += x,
+            Instruction::Down(x) => sub.v += x,
+            Instruction::Up(x) => sub.v -= x,
         }
     }
 
-    let aim = h_pos * depth;
+    let aim = sub.h * sub.v;
 
     println!("aim: {}", aim);
 
