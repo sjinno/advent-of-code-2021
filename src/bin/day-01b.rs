@@ -7,7 +7,7 @@ fn main() -> Result<(), Error> {
         &data
             .windows(3)
             .map(|win| win.iter().sum::<u32>())
-            .collect::<Vec<u32>>(),
+            .collect::<Vec<_>>(),
     );
     println!("count: {}", count);
     Ok(())
