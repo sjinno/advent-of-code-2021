@@ -9,7 +9,7 @@ fn main() -> Result<(), Error> {
     }
 
     let mut lines = buffer.lines();
-    let mut prev: u32 = lines.next().unwrap().parse()?;
+    let mut prev: u32 = lines.by_ref().take(1).next().unwrap().parse()?;
     let mut counter = 0;
 
     for line in lines {
