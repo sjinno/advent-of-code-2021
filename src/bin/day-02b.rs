@@ -14,17 +14,18 @@ fn main() -> Result<(), Error> {
 
     for line in buffer.lines() {
         let mut split = line.split(' ');
-
-        match (
+        let (instruction, x) = (
             split.next().unwrap(),
             split.next().unwrap().parse::<isize>()?,
-        ) {
-            ("forward", x) => {
+        );
+
+        match instruction {
+            "forward" => {
                 h_pos += x;
                 depth_multiplied += x * depth;
             }
-            ("down", x) => depth += x,
-            ("up", x) => depth -= x,
+            "down" => depth += x,
+            "up" => depth -= x,
             _ => {}
         }
     }
