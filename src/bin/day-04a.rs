@@ -1,7 +1,7 @@
 use failure::Error;
 use std::io::{self, Read};
 
-const BINGO_SIZE: u8 = 5;
+const BINGO_SIZE: usize = 5;
 
 #[derive(Debug, Clone, Copy)]
 enum Cell {
@@ -24,7 +24,6 @@ fn main() -> Result<(), Error> {
         .split(',')
         .map(|c| c.parse::<u32>().unwrap())
         .collect::<Vec<u32>>();
-    // println!("calls: {:?}", calls);
 
     let mut boards = Vec::new();
     let mut new_board = Vec::new();
@@ -51,17 +50,6 @@ fn main() -> Result<(), Error> {
         }
     }
 
-    // println!("boards: {:?}", boards);
-
-    // let pos = boards[0].iter().nth(2).unwrap().iter().position(|elt| {
-    //     if let Cell::Uncalled(x) = elt {
-    //         *x == calls[0]
-    //     } else {
-    //         false
-    //     }
-    // });
-    // println!("pos: {:?}", pos);
-
     let mut ans = 0;
 
     'outer: for call in calls.iter() {
@@ -75,14 +63,10 @@ fn main() -> Result<(), Error> {
                     }
                 });
                 if let Some(col) = pos {
-                    // println!("call: {}", call);
-                    // println!("(row, col): ({}, {})", i, col);
-                    // println!();
                     board[i][col] = Cell::Called(*call);
 
                     if is_bingo(&board[..], i, col) {
                         println!("BINGO!!");
-                        // println!("board: {:?}", board);
                         for row in board {
                             for col in row {
                                 if let Cell::Uncalled(x) = col {
@@ -99,8 +83,6 @@ fn main() -> Result<(), Error> {
             }
         }
     }
-
-    // println!("boards: {:#?}", boards);
 
     Ok(())
 }
